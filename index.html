@@ -89,11 +89,10 @@
 
             display: flex;
             align-items: center;
-            justify-content: center;
-            flex-wrap: nowrap;
+            justify-content: flex-start;
         }
 
-        /* Nav Links Container */
+        /* Nav Links Container with Horizontal Scroll Support */
         .nav-links {
             position: relative; /* Anchor for sliding bubble */
             display: flex;
@@ -102,6 +101,19 @@
             list-style: none;
             flex-wrap: nowrap;
             height: 100%;
+
+            /* Smooth horizontal scrolling when content overflows */
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+
+            /* Hide scrollbars across browsers */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+
+        .nav-links::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
         }
 
         /* Sliding Active Bubble */
@@ -123,6 +135,7 @@
             height: 100%;
             display: flex;
             align-items: center;
+            flex-shrink: 0; /* Prevent text tabs from shrinking */
             z-index: 1; /* Keep text rendered over the bubble indicator */
         }
 
@@ -407,6 +420,9 @@
         function updateBubblePosition(activeElement) {
             bubble.style.width = `${activeElement.offsetWidth}px`;
             bubble.style.left = `${activeElement.offsetLeft}px`;
+
+            // Auto-scroll the active item into view on narrow screens
+            activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
 
         // Initialize bubble position and title on page load
@@ -430,7 +446,7 @@
                 navLinks.forEach(item => item.classList.remove('active'));
                 link.classList.add('active');
 
-                // Slide the bubble to the clicked link
+                // Slide the bubble to the clicked link & center it in viewport if scrolled
                 updateBubblePosition(link);
 
                 // Update browser tab title
