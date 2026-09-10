@@ -76,7 +76,7 @@
             max-width: calc(100% - (var(--court-spacing) * 2));
             
             height: var(--navbar-height);
-            padding: 4px 4px;
+            padding: 4px;
 
             /* Pure frosted glass effect */
             background: rgba(255, 255, 255, 0.08);
@@ -91,10 +91,8 @@
             align-items: center;
             justify-content: flex-start;
 
-            /* Perfectly clips content along the pill's circular corner curvature */
+            /* Enforces strict circular corner clipping */
             overflow: hidden;
-            -webkit-mask-image: -webkit-radial-gradient(white, black);
-            mask-image: radial-gradient(circle at center, white 100%, black 100%);
         }
 
         /* Nav Links Container with Horizontal Scroll Support */
@@ -106,6 +104,9 @@
             list-style: none;
             flex-wrap: nowrap;
             height: 100%;
+
+            /* Inherit pill rounding so scroll contents conform to ends */
+            border-radius: inherit;
 
             /* Smooth horizontal scrolling when content overflows */
             overflow-x: auto;
@@ -128,7 +129,7 @@
             left: 0;
             height: 100%;
             background: rgba(255, 255, 255, 0.14);
-            border-radius: 9999px;
+            border-radius: 9999px; /* Matches pill curvature */
             pointer-events: none;
             /* Smooth sliding animation across width and left offset */
             transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
