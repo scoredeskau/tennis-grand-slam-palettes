@@ -91,8 +91,10 @@
             align-items: center;
             justify-content: flex-start;
 
-            /* Clips child elements and sliding bubble perfectly to the rounded pill edges */
+            /* Perfectly clips content along the pill's circular corner curvature */
             overflow: hidden;
+            -webkit-mask-image: -webkit-radial-gradient(white, black);
+            mask-image: radial-gradient(circle at center, white 100%, black 100%);
         }
 
         /* Nav Links Container with Horizontal Scroll Support */
