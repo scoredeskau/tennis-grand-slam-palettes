@@ -5,135 +5,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Australian Open</title>
     
-    <!-- Tennis Emoji Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎾</text></svg>">
 
     <style>
-        * {
+        *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        /* 
-           Official Grand Slam Surface & Surround Color Palette
-        */
         :root {
-            /* Australian Open: Official Plexicushion True Blue & Midnight Navy */
-            --bg-color: #000C3C;    /* AO Midnight Navy surround */
-            --court-color: #0091D2; /* AO True Blue court surface */
-            --transition-speed: 0.4s;
-
+            --bg-color: #000C3C;
+            --court-color: #0091D2;
             --navbar-height: 52px;
+            --court-spacing: clamp(12px, 3vw, 24px);
         }
 
-        body.theme-australian {
-            --bg-color: #000C3C;    /* AO Midnight Navy */
-            --court-color: #0091D2; /* AO True Blue */
-        }
-
-        body.theme-french {
-            --bg-color: #1A4D2E;    /* Parisian Forest Green surround */
-            --court-color: #C2593F; /* Roland Garros Terracotta Red Clay */
-        }
-
-        body.theme-wimbledon {
-            --bg-color: #3D2358;    /* AELTC Royal Purple surround */
-            --court-color: #21713C; /* Wimbledon Grass Green court */
-        }
-
-        body.theme-usopen {
-            --bg-color: #355E3B;    /* Laykold US Open Green surround */
-            --court-color: #1E8FD5; /* Official US Open Blue court */
-        }
+        body.theme-australian { --bg-color: #000C3C; --court-color: #0091D2; }
+        body.theme-french     { --bg-color: #1A4D2E; --court-color: #C2593F; }
+        body.theme-wimbledon  { --bg-color: #3D2358; --court-color: #21713C; }
+        body.theme-usopen     { --bg-color: #355E3B; --court-color: #1E8FD5; }
 
         body {
-            background-color: var(--bg-color); 
+            background-color: var(--bg-color);
             width: 100vw;
             min-height: 100vh;
             overflow-x: hidden;
-            transition: background-color var(--transition-speed) ease;
-            
-            --court-spacing: clamp(12px, 3vw, 24px);
-
-            padding-top: calc((var(--court-spacing) * 2) + var(--navbar-height));
-            padding-left: var(--court-spacing);
-            padding-right: var(--court-spacing);
-            padding-bottom: var(--court-spacing);
+            transition: background-color 0.4s ease;
+            padding: calc((var(--court-spacing) * 2) + var(--navbar-height)) var(--court-spacing) var(--court-spacing);
         }
 
-        /* 
-           Colorless Glassmorphism Pill Navbar
-        */
         .navbar {
             position: fixed;
             top: var(--court-spacing);
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-
             width: fit-content;
             max-width: calc(100% - (var(--court-spacing) * 2));
-            
             height: var(--navbar-height);
             padding: 4px;
-
-            /* Pure frosted glass effect */
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            
             border-radius: 9999px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
-
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-
-            /* Enforces strict circular corner clipping */
             overflow: hidden;
         }
 
-        /* Nav Links Container with Horizontal Scroll Support */
         .nav-links {
-            position: relative; /* Anchor for sliding bubble */
+            position: relative;
             display: flex;
             align-items: center;
             gap: 4px;
             list-style: none;
-            flex-wrap: nowrap;
             height: 100%;
-
-            /* Inherit pill rounding so scroll contents conform to ends */
             border-radius: inherit;
-
-            /* Smooth horizontal scrolling when content overflows */
             overflow-x: auto;
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
-
-            /* Hide scrollbars across browsers */
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE/Edge */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
-        .nav-links::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
-        }
+        .nav-links::-webkit-scrollbar { display: none; }
 
-        /* Sliding Active Bubble */
         .nav-bubble {
             position: absolute;
             top: 0;
             left: 0;
             height: 100%;
             background: rgba(255, 255, 255, 0.14);
-            border-radius: 9999px; /* Matches pill curvature */
+            border-radius: 9999px;
             pointer-events: none;
-            /* Smooth sliding animation across width and left offset */
-            transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                        width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 0;
         }
 
@@ -141,125 +87,97 @@
             height: 100%;
             display: flex;
             align-items: center;
-            flex-shrink: 0; /* Prevent text tabs from shrinking */
-            z-index: 1; /* Keep text rendered over the bubble indicator */
+            flex-shrink: 0;
+            z-index: 1;
         }
 
         .nav-links a {
             color: rgba(255, 255, 255, 0.65);
             text-decoration: none;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: system-ui, -apple-system, sans-serif;
             font-size: 14px;
             font-weight: 300;
             letter-spacing: 0.5px;
             white-space: nowrap;
             cursor: pointer;
-
             height: 100%;
             display: flex;
             align-items: center;
             padding: 0 18px;
             border-radius: 9999px;
-            border: none;
-            outline: none;
             transition: color 0.25s ease, background 0.25s ease;
         }
 
         .nav-links a:hover {
-            color: #ffffff;
+            color: #fff;
             background: rgba(255, 255, 255, 0.05);
         }
 
-        /* Active Text Styling */
         .nav-links a.active {
-            color: #ffffff;
-            font-weight: 300;
-            background: transparent; /* Handled by .nav-bubble */
+            color: #fff;
+            background: transparent;
         }
 
-        /* Container for the list of courts */
         .court-container {
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            align-items: center;
-
             gap: var(--court-spacing);
             container-type: inline-size;
         }
 
-        /* 
-           Single Horizontal Tennis Court
-           Official ITF proportions: 78ft length x 36ft total width (78 / 36 ratio).
-        */
         .court {
             width: 100%;
             aspect-ratio: 78 / 36;
             position: relative;
             background-color: var(--court-color);
-            transition: background-color var(--transition-speed) ease;
-
+            transition: background-color 0.4s ease;
             --line-thickness: clamp(1.5px, 0.35cqi, 3px);
-
-            /* Complete outer court boundary */
-            border: var(--line-thickness) solid #ffffff;
+            border: var(--line-thickness) solid #fff;
         }
 
-        /* Doubles Alley Lines */
-        .court::before,
-        .court::after {
+        .court::before, .court::after {
             content: '';
             position: absolute;
-            left: 0;
-            right: 0;
+            left: 0; right: 0;
             height: var(--line-thickness);
-            background-color: #ffffff;
+            background-color: #fff;
             z-index: 1;
         }
-        .court::before { top: 12.5%; }    /* Top doubles line */
-        .court::after  { bottom: 12.5%; } /* Bottom doubles line */
+        .court::before { top: 12.5%; }
+        .court::after  { bottom: 12.5%; }
 
-        /* Inner Court Markings Container */
         .inner-court {
             position: absolute;
-            top: 12.5%;
-            bottom: 12.5%;
-            left: 0;
-            right: 0;
+            inset: 12.5% 0;
         }
 
-        /* Service Lines */
-        .service-line-left,
-        .service-line-right {
+        .service-line-left, .service-line-right {
             position: absolute;
-            top: 0;
-            bottom: 0;
+            top: 0; bottom: 0;
             width: var(--line-thickness);
-            background-color: #ffffff;
+            background-color: #fff;
             z-index: 2;
         }
         .service-line-left  { left: 23.0769%; }
         .service-line-right { right: 23.0769%; }
 
-        /* Center Service Line */
         .center-service-line {
             position: absolute;
             top: 50%;
             left: 23.0769%;
             right: 23.0769%;
             height: var(--line-thickness);
-            background-color: #ffffff;
+            background-color: #fff;
             transform: translateY(-50%);
             z-index: 2;
         }
 
-        /* Net Line */
         .net {
             position: absolute;
-            top: 0;
-            bottom: 0;
+            top: 0; bottom: 0;
             left: 50%;
             width: var(--line-thickness);
             background-color: rgba(255, 255, 255, 0.5);
@@ -267,23 +185,21 @@
             z-index: 3;
         }
 
-        /* Center Mark on Baselines */
         .hash-left, .hash-right {
             position: absolute;
             top: 50%;
             width: max(0.427cqi, 4px);
             height: var(--line-thickness);
-            background-color: #ffffff;
+            background-color: #fff;
             transform: translateY(-50%);
             z-index: 2;
         }
-        .hash-left { left: 0; }
+        .hash-left  { left: 0; }
         .hash-right { right: 0; }
     </style>
 </head>
 <body class="theme-australian">
 
-    <!-- Floating Pill Navigation Bar -->
     <nav class="navbar">
         <ul class="nav-links">
             <div class="nav-bubble" id="navBubble"></div>
@@ -295,177 +211,43 @@
     </nav>
 
     <div class="court-container">
-        <!-- Court 1 -->
-        <div class="court">
-            <div class="inner-court">
-                <div class="service-line-left"></div>
-                <div class="service-line-right"></div>
-                <div class="center-service-line"></div>
-            </div>
-            <div class="net"></div>
-            <div class="hash-left"></div>
-            <div class="hash-right"></div>
-        </div>
-
-        <!-- Court 2 -->
-        <div class="court">
-            <div class="inner-court">
-                <div class="service-line-left"></div>
-                <div class="service-line-right"></div>
-                <div class="center-service-line"></div>
-            </div>
-            <div class="net"></div>
-            <div class="hash-left"></div>
-            <div class="hash-right"></div>
-        </div>
-
-        <!-- Court 3 -->
-        <div class="court">
-            <div class="inner-court">
-                <div class="service-line-left"></div>
-                <div class="service-line-right"></div>
-                <div class="center-service-line"></div>
-            </div>
-            <div class="net"></div>
-            <div class="hash-left"></div>
-            <div class="hash-right"></div>
-        </div>
-
-        <!-- Court 4 -->
-        <div class="court">
-            <div class="inner-court">
-                <div class="service-line-left"></div>
-                <div class="service-line-right"></div>
-                <div class="center-service-line"></div>
-            </div>
-            <div class="net"></div>
-            <div class="hash-left"></div>
-            <div class="hash-right"></div>
-        </div>
-
-        <!-- Court 5 -->
-        <div class="court">
-            <div class="inner-court">
-                <div class="service-line-left"></div>
-                <div class="service-line-right"></div>
-                <div class="center-service-line"></div>
-            </div>
-            <div class="net"></div>
-            <div class="hash-left"></div>
-            <div class="hash-right"></div>
-        </div>
-
-        <!-- Court 6 -->
-        <div class="court">
-            <div class="inner-court">
-                <div class="service-line-left"></div>
-                <div class="service-line-right"></div>
-                <div class="center-service-line"></div>
-            </div>
-            <div class="net"></div>
-            <div class="hash-left"></div>
-            <div class="hash-right"></div>
-        </div>
-
-        <!-- Court 7 -->
-        <div class="court">
-            <div class="inner-court">
-                <div class="service-line-left"></div>
-                <div class="service-line-right"></div>
-                <div class="center-service-line"></div>
-            </div>
-            <div class="net"></div>
-            <div class="hash-left"></div>
-            <div class="hash-right"></div>
-        </div>
-
-        <!-- Court 8 -->
-        <div class="court">
-            <div class="inner-court">
-                <div class="service-line-left"></div>
-                <div class="service-line-right"></div>
-                <div class="center-service-line"></div>
-            </div>
-            <div class="net"></div>
-            <div class="hash-left"></div>
-            <div class="hash-right"></div>
-        </div>
-
-        <!-- Court 9 -->
-        <div class="court">
-            <div class="inner-court">
-                <div class="service-line-left"></div>
-                <div class="service-line-right"></div>
-                <div class="center-service-line"></div>
-            </div>
-            <div class="net"></div>
-            <div class="hash-left"></div>
-            <div class="hash-right"></div>
-        </div>
-
-        <!-- Court 10 -->
-        <div class="court">
-            <div class="inner-court">
-                <div class="service-line-left"></div>
-                <div class="service-line-right"></div>
-                <div class="center-service-line"></div>
-            </div>
-            <div class="net"></div>
-            <div class="hash-left"></div>
-            <div class="hash-right"></div>
-        </div>
+        <script>
+            document.write(`
+                <div class="court"><div class="inner-court"><div class="service-line-left"></div><div class="service-line-right"></div><div class="center-service-line"></div></div><div class="net"></div><div class="hash-left"></div><div class="hash-right"></div></div>
+            `.repeat(10));
+        </script>
     </div>
 
-    <!-- Script to slide bubble indicator, toggle theme, & update document title -->
     <script>
         const navLinks = document.querySelectorAll('.nav-links a');
         const bubble = document.getElementById('navBubble');
-        const themeClasses = ['theme-australian', 'theme-french', 'theme-wimbledon', 'theme-usopen'];
 
-        // Function to reposition the active bubble slider over the active element
-        function updateBubblePosition(activeElement) {
-            bubble.style.width = `${activeElement.offsetWidth}px`;
-            bubble.style.left = `${activeElement.offsetLeft}px`;
-
-            // Auto-scroll the active item into view on narrow screens
-            activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        function updateBubble(el) {
+            bubble.style.width = `${el.offsetWidth}px`;
+            bubble.style.left = `${el.offsetLeft}px`;
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
 
-        // Initialize bubble position and title on page load
-        const initialActive = document.querySelector('.nav-links a.active');
-        if (initialActive) {
-            updateBubblePosition(initialActive);
-            document.title = initialActive.textContent;
+        const activeLink = document.querySelector('.nav-links a.active');
+        if (activeLink) {
+            updateBubble(activeLink);
+            document.title = activeLink.textContent;
         }
 
         navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
+            link.addEventListener('click', e => {
                 e.preventDefault();
-                
-                const selectedTheme = link.getAttribute('data-theme');
-
-                // Toggle body background theme
-                document.body.classList.remove(...themeClasses);
-                document.body.classList.add(selectedTheme);
-
-                // Update active state in nav links
+                document.body.className = link.dataset.theme;
                 navLinks.forEach(item => item.classList.remove('active'));
                 link.classList.add('active');
-
-                // Slide the bubble to the clicked link & center it in viewport if scrolled
-                updateBubblePosition(link);
-
-                // Update browser tab title
+                updateBubble(link);
                 document.title = link.textContent;
             });
         });
 
-        // Recalculate position on window resize
         window.addEventListener('resize', () => {
-            const currentActive = document.querySelector('.nav-links a.active');
-            if (currentActive) {
-                updateBubblePosition(currentActive);
-            }
+            const current = document.querySelector('.nav-links a.active');
+            if (current) updateBubble(current);
         });
     </script>
 </body>
